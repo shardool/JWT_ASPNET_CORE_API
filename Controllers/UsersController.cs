@@ -5,20 +5,20 @@ using WebApi.Entities;
 
 namespace WebApi.Controllers
 {
-  [Authorize]
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class APIController : ControllerBase
     {
         private IUserService _userService;
 
-        public UsersController(IUserService userService)
+        public APIController(IUserService userService)
         {
             _userService = userService;
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost("/authenticate")]
+        [Route("/authenticate")]
         public IActionResult Authenticate([FromBody]User userParam)
         {
             var user = _userService.Authenticate(userParam.Username, userParam.Password);
@@ -29,11 +29,12 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpGet]
+        [HttpGet("whoami")]
+        [Route("/whoami")]
         public IActionResult GetAll()
         {
-            var users =  _userService.GetAll();
-            return Ok(users);
+            var users = _userService.GetAll();
+            return Ok(new { userId = "Q11070", userName = "Ghanti, Shardul", roles = new string[] { "GLOBAL_ADMIN", "POWERBI_USER" } });
         }
     }
 }
